@@ -1,7 +1,7 @@
-pi-sht1x
+bbb-sht1x
 ========
 
-Node.js library for the SHT1x (SHT10, SHT11, SHT15) family of humidity/temperature sensors for Raspberry Pi, based on [John Burns' C library](http://www.john.geek.nz/2012/08/reading-data-from-a-sensirion-sht1x-with-a-raspberry-pi/).
+Node.js library for the SHT1x (SHT10, SHT11, SHT15) family of humidity/temperature sensors for Beaglebone Black using Octablbonescript. Forked from [keito's Raspberry Pi library](https://github.com/keito/pi-sht1x).
 
 The sensor is sold as a soil temperature/moisture sensor at many popular electronics outlets.
 
@@ -9,18 +9,18 @@ This library assumes that your sensor pins are hooked up as follows:
 
 | SHT1x Pin | Connected to
 | --------- | -------------------------
-| GND       | Ground (Pin 6)
-| DATA      | 3V3 Power (Pin 1) via 10k pullup resistor AND GPIO 24 (Pin 18)
-| SCK       | GPIO 23 (Pin 16)
-| VCC       | 3V3 Power (Pin 1)
+| GND       | Ground
+| DATA      | 5V Power via 10k pullup resistor AND P9_11
+| SCK       | P9_13
+| VCC       | 5V Power
 
-If your `DATA` and `SCK` pins are hooked up to different GPIO ports, you can modify that atop `SHT1x.js`. Note that the `pi-gpio` library uses physical pin numbers to refer to the GPIO ports, and not the Broadcom chip pin numbers. For more information, see http://elinux.org/RPi_Low-level_peripherals.
+If your `DATA` and `SCK` pins are hooked up to different pins, you can modify that atop `SHT1x.js`. Note that the `octablbonescript` library uses header pin numbers to refer to the GPIO ports, and not the GPIO numbers. For more information, see https://github.com/theoctal/octalbonescript/wiki/PinMode.
 
 Simple example:
 
 ```JavaScript
 var async = require('async');
-var SHT1x = require('pi-sht1x');
+var SHT1x = require('bbb-sht1x');
 
 async.series([
   SHT1x.init,
