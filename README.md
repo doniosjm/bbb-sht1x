@@ -1,4 +1,4 @@
-bbb-sht1x
+beaglebone-black-sht1x
 ========
 
 Node.js library for the SHT1x (SHT10, SHT11, SHT15) family of humidity/temperature sensors for Beaglebone Black using Octablbonescript. Forked from [keito's Raspberry Pi library](https://github.com/keito/pi-sht1x).
@@ -20,7 +20,7 @@ Simple example:
 
 ```JavaScript
 var async = require('async');
-var SHT1x = require('bbb-sht1x');
+var SHT1x = require('beaglebone-black-sht1x');
 
 async.series([
   SHT1x.init,

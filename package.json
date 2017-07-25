@@ -1,5 +1,5 @@
 {
-    "name": "bbb-sht1x",
+    "name": "beaglebone-black-sht1x",
     "version": "0.0.1",
     "description": "Beaglebone Black library for SHT1x humidity/temperature sensors. Forked from https://github.com/keito/pi-sht1x and updated to use with Octalbonescript (https://github.com/theoctal/octalbonescript).",
     "main": "SHT1x.js",
@@ -13,7 +13,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/doniosjm/bbb-sht1x.git"
+        "url": "git://github.com/doniosjm/beaglebone-black-sht1x.git"
     },
     "keywords": [
         "beaglebone",
@@ -29,6 +29,6 @@
     "author": "Jeff Donios",
     "license": "CC BY-SA v3.0",
     "bugs": {
-        "url": "https://github.com/doniosjm/bbb-sht1x/issues"
+        "url": "https://github.com/doniosjm/beaglebone-black-sht1x/issues"
     }
 }
