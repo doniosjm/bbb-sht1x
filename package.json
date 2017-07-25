@@ -1,6 +1,6 @@
 {
   "name": "beaglebone-black-sht1x",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Beaglebone Black library for SHT1x humidity/temperature sensors. Forked from https://github.com/keito/pi-sht1x and updated to use with Octalbonescript (https://github.com/theoctal/octalbonescript).",
   "main": "SHT1x.js",
   "dependencies": {

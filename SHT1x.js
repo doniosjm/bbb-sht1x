@@ -375,7 +375,7 @@ const DataRead = (callback) => {
     b.digitalRead(PIN_DATA, callback);
 }
 
-const Wait(callback) {
+const Wait = (callback) => {
     sleep.usleep(2);
     callback();
 }
