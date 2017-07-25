@@ -19,24 +19,24 @@
  * License: CC BY-SA v3.0 - http://creativecommons.org/licenses/by-sa/3.0/
  */
 
-let async = require('async');
-let b = require('octalbonescript');
-let sleep = require('sleep');
+const async = require('async');
+const b = require('octalbonescript');
+const sleep = require('sleep');
 
 // TODO : make pins configurable on the object
 // Set these to the physical Beaglebone Black pin numbers to which your SHT1x pins are connected.
-let PIN_SCK = 'P9_13';
-let PIN_DATA = 'P9_11';
-BYTE_RESET = 0x1E;
+const PIN_SCK = 'P9_13';
+const PIN_DATA = 'P9_11';
+const BYTE_RESET = 0x1E;
 
 // Coefficients per the datasheet
-let C1 = -2.0468;
-let C2 = 0.0367;
-let C3 = -0.0000015955;
-let T1 = 0.01;
-let T2 = 0.00008;
-let D1 = -39.66;
-let D2 = 0.01;
+const C1 = -2.0468;
+const C2 = 0.0367;
+const C3 = -0.0000015955;
+const T1 = 0.01;
+const T2 = 0.00008;
+const D1 = -39.66;
+const D2 = 0.01;
 
 // Global value containing the current checksum value
 let CRCValue = 0;
@@ -45,7 +45,7 @@ let SHT1x = {
     /**
      * Initializes transmissions for the first time.
      */
-    init: function(callback) {
+    init: (callback) => {
         async.series([
             LongWait,
             SCKOutput,
@@ -58,7 +58,7 @@ let SHT1x = {
     /**
      * Resets transmissions with the sensor.
      */
-    reset: function(callback) {
+    reset: (callback) => {
         let sequence = [
             DataHigh, Wait
         ];
@@ -70,7 +70,7 @@ let SHT1x = {
         }
         sequence.push(
             SHT1x._transmissionStart,
-            function(callback) {
+            (callback) => {
                 SHT1x._sendByte(BYTE_RESET, callback);
             }
         );
@@ -80,7 +80,7 @@ let SHT1x = {
     /**
      * Calls the transmission start sequence.
      */
-    _transmissionStart: function(callback) {
+    _transmissionStart: (callback) => {
         async.series([
             SCKHigh, Wait,
             DataLow, Wait,
@@ -88,7 +88,7 @@ let SHT1x = {
             SCKHigh, Wait,
             DataHigh, Wait,
             SCKLow, Wait
-        ], function(error) {
+        ], (error) => {
             CRCValue = 0;
             callback(error);
         });
@@ -97,7 +97,7 @@ let SHT1x = {
     /**
      * Sends a byte to the sensor.
      */
-    _sendByte: function(value, callback) {
+    _sendByte: (value, callback) => {
         let sequence = [];
         for (let mask = 0x80; mask; mask >>= 1) {
             sequence.push(
@@ -114,12 +114,12 @@ let SHT1x = {
             SCKHigh, Wait
         );
 
-        async.series(sequence, function(error) {
+        async.series(sequence, (error) => {
             if (error) {
                 callback(error);
                 return;
             }
-            DataRead(function(error, dataValue) {
+            DataRead((error, dataValue) => {
                 if (error) {
                     callback(error);
                     return;
@@ -141,15 +141,15 @@ let SHT1x = {
      * @param {bool} sendACK Whether to send an ACK
      * @param {function} callback function(error, value)
      */
-    _readByte: function(sendACK, callback) {
+    _readByte: (sendACK, callback) => {
         let value = 0;
         let sequence = [];
 
         for (let mask = 0x80; mask; mask >>= 1) {
             sequence.push(
                 SCKHigh, Wait,
-                function(mask, callback) {
-                    DataRead(function(mask, error, dataValue) {
+                ((mask, callback) => {
+                    DataRead(((mask, error, dataValue) => {
                         if (error) {
                             callback(error);
                             return;
@@ -158,8 +158,8 @@ let SHT1x = {
                             value |= mask;
                         }
                         callback();
-                    }.bind(undefined, mask));
-                }.bind(undefined, mask),
+                    }).bind(undefined, mask));
+                }).bind(undefined, mask),
                 SCKLow, Wait // Tell sensor to give us more data
             );
         }
@@ -174,7 +174,7 @@ let SHT1x = {
         if (sendACK) {
             sequence.push(DataHigh, Wait);
         }
-        async.series(sequence, function(error) {
+        async.series(sequence, (error) => {
             callback(error, value);
         });
     },
@@ -182,10 +182,10 @@ let SHT1x = {
     /**
      * Tells the sensor to start a particular type of measurement.
      */
-    _startMeasurement: function(type, callback) {
+    _startMeasurement: (type, callback) => {
         async.series([
             SHT1x._transmissionStart,
-            function(callback) {
+            (callback) => {
                 SHT1x._sendByte(type, callback);
             }
         ], callback);
@@ -196,16 +196,16 @@ let SHT1x = {
      *
      * @param {function} callback function(error, value)
      */
-    _getValue: function(callback) {
+    _getValue: (callback) => {
         // Wait for measurement to complete (timeout after 250 ms = 210 ms + 15%)
         let continueWaiting = true;
         let delayCount = 62;
         async.whilst(
-            function() {
+            () => {
                 return continueWaiting;
             },
-            function(callback) {
-                DataRead(function(error, dataValue) {
+            (callback) => {
+                DataRead((error, dataValue) => {
                     if (error) {
                         callback(error);
                         return;
@@ -226,7 +226,7 @@ let SHT1x = {
                     callback();
                 });
             },
-            function(error) {
+            (error) => {
                 if (error) {
                     callback(error);
                     return;
@@ -234,25 +234,25 @@ let SHT1x = {
                 // A value is available for us
                 let composedValue = 0;
                 async.series([
-                    function(callback) {
+                    (callback) => {
                         // Read High Byte
-                        SHT1x._readByte(true, function(error, dataValue) {
+                        SHT1x._readByte(true, (error, dataValue) => {
                             composedValue = dataValue << 8;
                             SHT1x._mutateCRC(dataValue);
                             callback(error);
                         });
                     },
-                    function(callback) {
+                    (callback) => {
                         // Read Low Byte
-                        SHT1x._readByte(true, function(error, dataValue) {
+                        SHT1x._readByte(true, (error, dataValue) => {
                             composedValue += dataValue;
                             SHT1x._mutateCRC(dataValue);
                             callback(error);
                         });
                     },
-                    function(callback) {
+                    (callback) => {
                         // Read checksum
-                        SHT1x._readByte(false, function(error, dataValue) {
+                        SHT1x._readByte(false, (error, dataValue) => {
                             if (error) {
                                 callback(error);
                             } else if (CRCValue !== mirrorByte(dataValue)) {
@@ -262,7 +262,7 @@ let SHT1x = {
                             }
                         });
                     }
-                ], function(error) {
+                ], (error) => {
                     callback(error, composedValue);
                 });
             }
@@ -272,14 +272,14 @@ let SHT1x = {
     /**
      * Measures and retrieves a single sensor value.
      */
-    _getSensorValue: function(type, valueCallback) {
+    _getSensorValue: (type, valueCallback) => {
         let rawValue;
         async.series([
-            function(callback) {
+            (callback) => {
                 SHT1x._startMeasurement(type, callback);
             },
-            function(callback) {
-                SHT1x._getValue(function(error, value) {
+            (callback) => {
+                SHT1x._getValue((error, value) => {
                     if (error) {
                         callback(error);
                         return;
@@ -288,7 +288,7 @@ let SHT1x = {
                     callback();
                 });
             }
-        ], function(error) {
+        ], (error) => {
             valueCallback(error, rawValue);
         });
     },
@@ -299,22 +299,22 @@ let SHT1x = {
      *
      * @param {function} valuesCallback function(error, object)
      */
-    getSensorValues: function(valuesCallback) {
+    getSensorValues: (valuesCallback) => {
         let rawTemp, rawHumidity;
         async.series([
-            function(callback) {
-                SHT1x._getSensorValue(SHT1x.TYPE_TEMPERATURE, function(error, value) {
+            (callback) => {
+                SHT1x._getSensorValue(SHT1x.TYPE_TEMPERATURE, (error, value) => {
                     rawTemp = value;
                     callback(error);
                 });
             },
-            function(callback) {
-                SHT1x._getSensorValue(SHT1x.TYPE_HUMIDITY, function(error, value) {
+            (callback) => {
+                SHT1x._getSensorValue(SHT1x.TYPE_HUMIDITY, (error, value) => {
                     rawHumidity = value;
                     callback(error);
                 });
             }
-        ], function(error) {
+        ], (error) => {
             valuesCallback(error, calculateValues(rawTemp, rawHumidity));
         });
     },
@@ -322,13 +322,13 @@ let SHT1x = {
     /**
      * Closes the pins that we opened.
      */
-    // shutdown: function(callback) {
+    // shutdown: (callback) => {
     //     gpio.close(PIN_SCK);
     //     gpio.close(PIN_DATA);
     //     callback && callback();
     // },
 
-    _mutateCRC: function(value) {
+    _mutateCRC: (value) => {
         for (let ii = 8; ii; ii--) {
             if ((CRCValue ^ value) & 0x80) {
                 CRCValue <<= 1;
@@ -347,45 +347,45 @@ SHT1x.TYPE_HUMIDITY = 0x05;
 
 module.exports = SHT1x;
 
-function SCKOutput(callback) {
+const SCKOutput = (callback) => {
     b.pinMode(PIN_SCK, b.OUTPUT, callback);
 }
 
-function SCKLow(callback) {
+const SCKLow = (callback) => {
     b.digitalWrite(PIN_SCK, b.LOW, callback);
 }
 
-function SCKHigh(callback) {
+const SCKHigh = (callback) => {
     b.digitalWrite(PIN_SCK, b.HIGH, callback);
 }
 
-function DataOutput(callback) {
+const DataOutput = (callback) => {
     b.pinMode(PIN_DATA, b.OUTPUT, callback);
 }
 
-function DataLow(callback) {
+const DataLow = (callback) => {
     b.pinMode(PIN_DATA, b.OUTPUT, callback);
 }
 
-function DataHigh(callback) {
+const DataHigh = (callback) => {
     b.pinMode(PIN_DATA, b.INPUT, callback);
 }
 
-function DataRead(callback) {
+const DataRead = (callback) => {
     b.digitalRead(PIN_DATA, callback);
 }
 
-function Wait(callback) {
+const Wait(callback) {
     sleep.usleep(2);
     callback();
 }
 
-function LongWait(callback) {
+const LongWait = (callback) => {
     sleep.usleep(20000); // 20 ms
     callback();
 }
 
-function calculateValues(rawTemp, rawHumidity) {
+const calculateValues = (rawTemp, rawHumidity) => {
     // Temperature in Celsius
     let trueTemp = D1 + (D2 * rawTemp);
     // Humidity
@@ -400,7 +400,7 @@ function calculateValues(rawTemp, rawHumidity) {
     };
 }
 
-function calculateDewpoint(temp, humidity) {
+const calculateDewpoint = (temp, humidity) => {
     let Tn = 243.12;
     let m = 17.62;
     if (temp < 0) {
@@ -412,7 +412,7 @@ function calculateDewpoint(temp, humidity) {
     return Tn * ((lnRH + mTTnT) / (m - lnRH - mTTnT));
 }
 
-function mirrorByte(value) {
+const mirrorByte = (value) => {
     let ret = 0;
     for (let ii = 0x80; ii; ii >>= 1) {
         if (value & 0x01) {
