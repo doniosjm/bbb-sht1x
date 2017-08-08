@@ -1,34 +1,34 @@
 {
-  "name": "beaglebone-black-sht1x",
-  "version": "0.0.4",
-  "description": "Beaglebone Black library for SHT1x humidity/temperature sensors. Forked from https://github.com/keito/pi-sht1x and updated to use with Octalbonescript (https://github.com/theoctal/octalbonescript).",
-  "main": "SHT1x.js",
-  "dependencies": {
-    "async": "^2.5.0",
-    "octalbonescript": "1.3.x",
-    "sleep": "^5.1.1"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/doniosjm/beaglebone-black-sht1x.git"
-  },
-  "keywords": [
-    "beaglebone",
-    "black",
-    "sht1x",
-    "sht10",
-    "sht11",
-    "sht15",
-    "humidity",
-    "temperature",
-    "sensor"
-  ],
-  "author": "Jeff Donios",
-  "license": "CC-BY-SA-3.0",
-  "bugs": {
-    "url": "https://github.com/doniosjm/beaglebone-black-sht1x/issues"
-  }
+    "name": "beaglebone-black-sht1x",
+    "version": "0.1.0",
+    "description": "Beaglebone Black library for SHT1x humidity/temperature sensors. Forked from https://github.com/keito/pi-sht1x and updated to use with Octalbonescript (https://github.com/theoctal/octalbonescript).",
+    "main": "SHT1x.js",
+    "dependencies": {
+        "async": "^2.5.0",
+        "octalbonescript": "1.3.x",
+        "sleep": "^5.1.1"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/doniosjm/beaglebone-black-sht1x.git"
+    },
+    "keywords": [
+        "beaglebone",
+        "black",
+        "sht1x",
+        "sht10",
+        "sht11",
+        "sht15",
+        "humidity",
+        "temperature",
+        "sensor"
+    ],
+    "author": "Jeff Donios",
+    "license": "CC-BY-SA-3.0",
+    "bugs": {
+        "url": "https://github.com/doniosjm/beaglebone-black-sht1x/issues"
+    }
 }

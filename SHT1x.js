@@ -23,10 +23,9 @@ const async = require('async');
 const b = require('octalbonescript');
 const sleep = require('sleep');
 
-// TODO : make pins configurable on the object
 // Set these to the physical Beaglebone Black pin numbers to which your SHT1x pins are connected.
-const PIN_SCK = 'P9_13';
-const PIN_DATA = 'P9_11';
+let PIN_SCK = 'P9_13';
+let PIN_DATA = 'P9_11';
 const BYTE_RESET = 0x1E;
 
 // Coefficients per the datasheet
@@ -45,7 +44,13 @@ let SHT1x = {
     /**
      * Initializes transmissions for the first time.
      */
-    init: (callback) => {
+    init: (sck, data, callback) => {
+        if (sck) {
+            PIN_SCK = sck;
+        }
+        if (data) {
+            PIN_DATA = data;
+        }
         async.series([
             LongWait,
             SCKOutput,
